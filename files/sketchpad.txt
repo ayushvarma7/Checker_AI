@@ -1,0 +1,10 @@
+this.info = infoSheet;
+this.width = infoSheet.width;
+this.height = infoSheet.height;
+this.rows = infoSheet.rows;
+this.columns = infoSheet.columns;
+this.lightColor = infoSheet.lightColor;
+this.darkColor = infoSheet.darkColor;
+this.checkerCount = infoSheet.checkerCount;
+
+Redesign your Checker.html setup

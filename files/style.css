@@ -1,0 +1,77 @@
+:root {
+  --border-radius: 15px;
+}
+/* 	background-image: url(); */
+body {
+	margin: 0;
+	padding: 0;
+	background-repeat: no-repeat;
+	background-position: center center;
+  background-attachment: fixed;
+  background-size: cover;
+	background-image: url("https://media.istockphoto.com/vectors/transparent-background-checkered-geometric-background-with-grey-and-vector-id1167499670?b=1&k=6&m=1167499670&s=612x612&w=0&h=nHfRNzRMplsQZi8Gjqhed5_ZJLTKqxUmA4nKrmtvibo=");
+}
+
+canvas {
+	border-radius: 20px;
+}
+
+* {
+  padding: 0px;
+  margin: 0px;
+box-sizing: border-box;
+}
+
+#winner_background {
+	position: abolute;
+	width: 100vw;
+	height: 100vh;
+	top: 0;
+	left: 0;
+	backdrop-filter: blur(2px);
+	display: none;
+}
+
+#winner_poster {
+	width: 400px;
+	height: 300px;
+	position: relative;
+	transform: translate(-50%, -50%);
+	left: 50%;
+	top: 50%;
+	border-radius: var(--border-radius);
+	border: 1px solid rgba(255, 255, 2555, 0.4);
+	backdrop-filter: blur(5px);
+	box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.5);
+	transition: all 0.3s ease-in-out;
+	font-family: 'Potta One', cursive;
+	justify-content: center;
+	align-items: center;
+	font-size: 50px;
+}
+
+#winner_poster:hover {
+	transform: scale(1.05) translate(-50%, -50%);
+	backdrop-filter: blur(10px);
+	/* background: radial-gradient(at 50% 50%, rgba(0, 0, 0, 0), rgba(255, 255, 255, 0.7)); */
+	box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.5);
+	animation: color_run 0.4s linear 0s infinite alternate;
+}
+
+@keyframes color_run {
+	0% {
+		background: radial-gradient(at 50% 50%, deepskyblue, white, white, white, white);
+	}
+	20% {
+		background: radial-gradient(at 50% 50%, white, deepskyblue, white, white, white);
+	}
+	40% {
+		background: radial-gradient(at 50% 50%, white, white, deepskyblue, white, white);
+	}
+	60% {
+		background: radial-gradient(at 50% 50%, white, white, white, deepskyblue, white);
+	}
+	80% {
+		background: radial-gradient(at 50% 50%, white, white, white, white, deepskyblue);
+	}
+}
