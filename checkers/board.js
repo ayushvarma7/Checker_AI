@@ -1,116 +1,115 @@
-class Board {
+class ChechersBoard {
   constructor() {
-    this.board = [];
-    this.redLeft = 12;
-    this.whiteLeft = 12;
-    this.redKings = 0;
-    this.whiteKings = 0;
-    this.createBoard();
-		this.hello = 'here';
+    this.Game_board = [];
+    this.Left_of_black_pawn = 12;
+    this.Left_of_white_pawn = 12;
+    this.King_of_blacks = 0;
+    this.King_of_whites = 0;
+    this.BoardBuilder();
   }
-  drawSquares() {
-    background(BoardLightColor);
-    for (let row = 0; row < Rows; row++) {
-      for (let col = (row + 1) % 2; col < Cols; col += 2) {
-        fill(BoardDarkColor);
+  SquareBuilder() {
+    background(WhiteBGcolor);
+    for (let r = 0; r < Total_Rows; r++) {
+      for (let columns = (r + 1) % 2; columns < Total_Columns; columns += 2) {
+        fill(BlackBGcolor);
         noStroke();
-        square(row * squareSize, col * squareSize, squareSize);
+        square(r * Size_of_squares, columns * Size_of_squares, Size_of_squares);
       }
     }
   }
-  evaluate() {
-    return this.whiteLeft - this.redLeft;
+  difference() {
+    return this.Left_of_white_pawn - this.Left_of_black_pawn;
   }
   getAllPieces(color) {
-    let pieces = [];
-    for (let r = 0; r < this.board.length; r++) {
-      for (let p = 0; p < this.board[r].length; p++) {
-        let piece = this.board[r][p];
-        if (piece !== 0) {
-          if (piece.color == color) pieces.push(piece);
+    let pawns = [];
+    for (let r = 0; r < this.Game_board.length; r++) {
+      for (let p = 0; p < this.Game_board[r].length; p++) {
+        let pawn = this.Game_board[r][p];
+        if (pawn !== 0) {
+          if (pawn.color == color) pawns.push(pawn);
         }
       }
     }
-    return pieces;
+    return pawns;
   }
-  move(piece, row, col) {
-    let current = this.board[piece.row][piece.col];
-    this.board[piece.row][piece.col] = this.board[row][col];
-    this.board[row][col] = current;
-    piece.move(row, col);
+  place(pawn, r, columns) {
+    let current = this.Game_board[pawn.r][pawn.columns];
+    this.Game_board[pawn.r][pawn.columns] = this.Game_board[r][columns];
+    this.Game_board[r][columns] = current;
+    pawn.place(r, columns);
 
-    if (row == Rows -1 || row == 0) {
-      piece.makeKing();
-      if (piece.color == LightColor) {
-        this.whiteKings += 1;
+    if (r == Total_Rows -1 || r == 0) {
+      pawn.makeKing();
+      if (pawn.color == LightColor) {
+        this.King_of_whites += 1;
       } else {
-        this.redKings += 1;
+        this.King_of_blacks += 1;
       }
     }
   }
-  getPiece(row, col) {
-    return this.board[row][col];
+  getPawn(r, columns) {
+    return this.Game_board[r][columns];
   }
-  createBoard() {
-    for (let row = 0; row < Rows; row++) {
-      this.board.push([]);
-      for (let col = 0; col < Cols; col++) {
-        if (col % 2 == (row + 1) % 2) {
-          if (row < 3) {
-            this.board[row].push(new Piece(row, col, LightColor));
-          } else if (row > 4) {
-            this.board[row].push(new Piece(row, col, DarkColor));
+  BoardBuilder() {
+    for (let r = 0; r < Total_Rows; r++) {
+      this.Game_board.push([]);
+      for (let columns = 0; columns < Total_Columns; columns++) {
+        if (columns % 2 == (r + 1) % 2) {
+          if (r < 3) {
+            this.Game_board[r].push(new Piece(r, columns, LightColor));
+          } else if (r > 4) {
+            this.Game_board[r].push(new Piece(r, columns, DarkColor));
           } else {
-            this.board[row].push(0);
+            this.Game_board[r].push(0);
           }
         } else {
-          this.board[row].push(0);
+          this.Game_board[r].push(0);
         }
       }
     }
   }
   draw() {
-    this.drawSquares();
-    for (let row = 0; row < Rows; row++) {
-      for (let col = 0; col < Cols; col++) {
-        let piece = this.board[row][col];
-        if (piece !== 0) {
-          piece.drawSelf();
+    this.SquareBuilder();
+    for (let r = 0; r < Total_Rows; r++) {
+      for (let columns = 0; columns < Total_Columns; columns++) {
+        let pawn = this.Game_board[r][columns];
+        if (pawn !== 0) {
+          pawn.drawSelf();
         }
       }
     }
   }
-  remove(pieces) {
-    for (var p = 0; p < pieces.length; p++) {
-      let piece = pieces[p];
-      this.board[piece.row][piece.col] = 0;
-      if (piece != 0) {
-        if (piece.color == DarkColor) {
-          this.redLeft -= 1;
+  remove(pawns) {
+    for (var p = 0; p < pawns.length; p++) {
+      let pawn = pawns[p];
+      this.Game_board[pawn.r][pawn.columns] = 0;
+      if (pawn != 0) {
+        if (pawn.color == DarkColor) {
+          this.Left_of_black_pawn -= 1;
         } else {
-          this.whiteLeft -= 1;
+          this.Left_of_white_pawn -= 1;
         }
       }
     }
   }
   winner() {
-    return this.redLeft <= 0 ? LightColor : this.whiteLeft <= 0 ? DarkColor : null;
+    return this.Left_of_black_pawn <= 0 ? LightColor : this.Left_of_white_pawn <= 0 ? DarkColor : null;
   }
-  getValidMoves(piece) {
+  getValidMoves(pawn) {
     let moves = []; // {m: [], j: []}
-    let left = piece.col - 1;
-    let right = piece.col + 1;
-    let row = piece.row; // This is the row that we are currently on
-    // "row - 3" allows you to look real far up, but -1 is meant to keep us from going beyond the top
-    if (piece.color == DarkColor || piece.king) { // "row - 1" tells us to look below the row that we are on
-      let leftRed = this.traverseLeftRed(row - 1, Math.max(row - 3, -1), -1, piece.color, left);
-      let rightRed = this.traverseRightRed(row - 1, Math.max(row - 3, -1), -1, piece.color, right);
+    let left = pawn.columns - 1;
+    let right = pawn.columns + 1;
+    let r = pawn.r; // This is the r that we are currently on
+    // "r - 3" allows you to look real far up, but -1 is meant to keep us from going beyond the top
+    if (pawn.color == DarkColor || pawn.king) { // "r - 1" tells us to look below the r that we are on
+      let leftRed = this.traverseLeftRed(r - 1, Math.max(r - 3, -1), -1, pawn.color, left);
+      let rightRed = this.traverseRightRed(r - 1, Math.max(r - 3, -1), -1, pawn.color, right);
       moves.update(leftRed);
       moves.update(rightRed);
     }
-    if (piece.color == LightColor || piece.king) {
-      let leftWhite = this.traverseLeftWhite(row + 1, Math.min(row + 3, Rows), 1, piece.color, left);
-      let rightWhite = this.traverseRightWhite(row + 1, Math.min(row + 3, Rows), 1, piece.color, right);
+    if (pawn.color == LightColor || pawn.king) {
+      let leftWhite = this.traverseLeftWhite(r + 1, Math.min(r + 3, Total_Rows), 1, pawn.color, left);
+      let rightWhite = this.traverseRightWhite(r + 1, Math.min(r + 3, Total_Rows), 1, pawn.color, right);
       moves.update(leftWhite);
       moves.update(rightWhite);
     }
@@ -118,12 +117,12 @@ class Board {
     moves = moves.filter(x => x.j.length >= maxJumps);
     return moves
   }
-  getForcedValidMoves(piece, color) {
+  getForcedValidMoves(pawn, color) {
     let validMoves = [];
     let maxJumps = Math.max(...this.getAllPieces(color).filter(x => this.getValidMoves(x).length > 0).map(y => Math.max(...this.getValidMoves(y).map(z => z.j.length))));
-    let jumpCount = Math.min(...this.getValidMoves(piece).map(x => x.j.length));
+    let jumpCount = Math.min(...this.getValidMoves(pawn).map(x => x.j.length));
     if ((maxJumps > 0 && jumpCount > 0) || (maxJumps == 0)) {
-      validMoves = this.getValidMoves(piece);
+      validMoves = this.getValidMoves(pawn);
     }
     return validMoves;
   }
@@ -135,7 +134,7 @@ class Board {
       if (left < 0) {
         break;
       }
-      let current = this.board[r][left];
+      let current = this.Game_board[r][left];
       if (current == 0) { // if square we are looking at is empty
         if (skipped.length > 0 && last.length == 0) {
           break;
@@ -148,14 +147,14 @@ class Board {
           });
         }
         if (last.length > 0) {
-          let row;
+          let r;
           if (step == -1) {
-            row = Math.max(r - 3, 0);
+            r = Math.max(r - 3, 0);
           } else {
-            row = Math.min(r + 3, Rows);
+            r = Math.min(r + 3, Total_Rows);
           }
-          moves.update(this.traverseLeftRed(r + step, row, step, color, left - 1, skipped = last));
-          moves.update(this.traverseRightRed(r + step, row, step, color, left + 1, skipped = last));
+          moves.update(this.traverseLeftRed(r + step, r, step, color, left - 1, skipped = last));
+          moves.update(this.traverseRightRed(r + step, r, step, color, left + 1, skipped = last));
         }
         break;
       } else if (current.color === color) {
@@ -171,10 +170,10 @@ class Board {
     var moves = [];
     let last = [];
     for (let r = start; r > stop; r += step) {
-      if (right >= Cols) {
+      if (right >= Total_Columns) {
         break;
       }
-      let current = this.board[r][right];
+      let current = this.Game_board[r][right];
       if (current == 0) {
         if (skipped.length > 0 && last.length == 0) {
           break;
@@ -184,14 +183,14 @@ class Board {
           moves.update({m: [r, right], j: last});
         }
         if (last.length > 0) {
-          let row;
+          let r;
           if (step == -1) {
-            row = Math.max(r - 3, 0);
+            r = Math.max(r - 3, 0);
           } else {
-            row = Math.min(r + 3, Rows);
+            r = Math.min(r + 3, Total_Rows);
           }
-          moves.update(this.traverseLeftRed(r + step, row, step, color, right - 1, skipped = last));
-          moves.update(this.traverseRightRed(r + step, row, step, color, right + 1, skipped = last));
+          moves.update(this.traverseLeftRed(r + step, r, step, color, right - 1, skipped = last));
+          moves.update(this.traverseRightRed(r + step, r, step, color, right + 1, skipped = last));
         }
         break;
       } else if (current.color == color) {
@@ -210,7 +209,7 @@ class Board {
       if (left < 0) {
         break;
       }
-      let current = this.board[r][left];
+      let current = this.Game_board[r][left];
       if (current == 0) { // if square we are looking at is empty
         if (skipped.length > 0 && last.length == 0) {
           break;
@@ -223,14 +222,14 @@ class Board {
           });
         }
         if (last.length > 0) {
-          let row;
+          let r;
           if (step == -1) {
-            row = Math.max(r - 3, 0);
+            r = Math.max(r - 3, 0);
           } else {
-            row = Math.min(r + 3, Rows);
+            r = Math.min(r + 3, Total_Rows);
           }
-          moves.update(this.traverseLeftWhite(r + step, row, step, color, left - 1, skipped = last));
-          moves.update(this.traverseRightWhite(r + step, row, step, color, left + 1, skipped = last));
+          moves.update(this.traverseLeftWhite(r + step, r, step, color, left - 1, skipped = last));
+          moves.update(this.traverseRightWhite(r + step, r, step, color, left + 1, skipped = last));
         }
         break;
       } else if (current.color === color) {
@@ -246,10 +245,10 @@ class Board {
     var moves = [];
     let last = [];
     for (let r = start; r < stop; r += step) {
-      if (right >= Cols) {
+      if (right >= Total_Columns) {
         break;
       }
-      let current = this.board[r][right];
+      let current = this.Game_board[r][right];
       if (current == 0) {
         if (skipped.length > 0 && last.length == 0) {
           break;
@@ -259,14 +258,14 @@ class Board {
           moves.update({m: [r, right], j: last});
         }
         if (last.length > 0) {
-          let row;
+          let r;
           if (step == -1) {
-            row = Math.max(r - 3, 0);
+            r = Math.max(r - 3, 0);
           } else {
-            row = Math.min(r + 3, Rows);
+            r = Math.min(r + 3, Total_Rows);
           }
-          moves.update(this.traverseLeftWhite(r + step, row, step, color, right - 1, skipped = last));
-          moves.update(this.traverseRightWhite(r + step, row, step, color, right + 1, skipped = last));
+          moves.update(this.traverseLeftWhite(r + step, r, step, color, right - 1, skipped = last));
+          moves.update(this.traverseRightWhite(r + step, r, step, color, right + 1, skipped = last));
         }
         break;
       } else if (current.color == color) {

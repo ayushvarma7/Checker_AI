@@ -1,7 +1,7 @@
 class Piece {
-  constructor(row, col, color) {
-    this.row = row;
-    this.col = col;
+  constructor(r, columns, color) {
+    this.r = r;
+    this.columns = columns;
     this.color = color;
     this.king = false;
     // this.direction = this.color === DarkColor ? -1 : 1;
@@ -11,20 +11,20 @@ class Piece {
     this.padding = 15;
   }
   calcPos() {
-    this.x = squareSize * this.col + Math.floor(squareSize / 2);
-    this.y = squareSize * this.row + Math.floor(squareSize / 2)
+    this.x = Size_of_squares * this.columns + Math.floor(Size_of_squares / 2);
+    this.y = Size_of_squares * this.r + Math.floor(Size_of_squares / 2)
   }
   makeKing() {
     this.king = true;
   }
   drawSelf() {
     ellipseMode(RADIUS);
-    let radius = Math.floor(squareSize/2) - this.padding;
+    let radius = Math.floor(Size_of_squares/2) - this.padding;
     fill(this.color);
     strokeWeight(2);
 		stroke(this.color === DarkColor ? LightColor : DarkColor)
     textAlign(CENTER, CENTER);
-    textSize(squareSize/2 - 5);
+    textSize(Size_of_squares/2 - 5);
     circle(this.x, this.y, radius);
     if (this.king) {
       noStroke();
@@ -33,12 +33,12 @@ class Piece {
       // text('K', this.x, this.y)
     }
   }
-  move(row, col) {
-    this.row = row;
-    this.col = col;
+  place(r, columns) {
+    this.r = r;
+    this.columns = columns;
     this.calcPos();
   }
-  hello() {
-    console.log('I exist');
-  }
+  // hello() {
+  //   console.log('I exist');
+  // }
 }

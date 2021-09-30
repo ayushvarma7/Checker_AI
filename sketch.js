@@ -8,9 +8,9 @@ var Computer_AI = '\uD83C\uDDEB';
 
 function getMousePos(pos) {
 	let x = pos.x, y = pos.y;
-	let row = Math.floor(y / squareSize);
-	let col = Math.floor(x / squareSize);
-	return { r: row, c: col };
+	let r = Math.floor(y / Size_of_squares);
+	let columns = Math.floor(x / Size_of_squares);
+	return { r: r, c: columns };
 }
 
 function setup() {
@@ -43,7 +43,7 @@ function keyPressed() {
 }
 
 function winCheck() {
-	// console.log(game.board.hello);
+	// console.log(game.Game_board.hello);
 	let winner = game.winner();
 	if (winner !== null && winner !== undefined) {
 		noLoop();

@@ -1,22 +1,22 @@
 var Width =  600,
 // window.innerWidth,
     Height = 600;
-var Rows = 8,
-    Cols = 8;
-var squareSize = Math.floor(Width / Rows);
+var Total_Rows = 8,
+    Total_Columns = 8;
+var Size_of_squares = Math.floor(Width / Total_Rows);
 var Crown, Glow_Crown;
 
 // rgb
 var DarkColor = "#000",
     LightColor = "#fff",
-		BoardDarkColor = "#000",
-		BoardLightColor = "purple",
+		BlackBGcolor = "#000",
+		WhiteBGcolor = "purple",
     Blue = "#85FFBB",
     Grey = "#808080";
 
 function preload() {
   // Crown = loadImage('assets/crown.png');
-  // Crown.scale = Crown.width / squareSize;
+  // Crown.scale = Crown.width / Size_of_squares;
   // Crown.w = Crown.width / Crown.scale;
   // Crown.h = Crown.height / Crown.scale;
 }
@@ -50,8 +50,8 @@ Array.prototype.mustJump = function() {
   // console.log(jumps)
 }
 
-Array.prototype.spot = function(row, col) {
-  return this.find(item => item.m.equalsArray([row, col]));
+Array.prototype.spot = function(r, columns) {
+  return this.find(item => item.m.equalsArray([r, columns]));
 }
 
 Array.prototype.equalsArray = function(array) {

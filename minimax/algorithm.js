@@ -1,18 +1,18 @@
 function minimax(position, depth, maxPlayer, game) {
   if (depth == 0 || (position.winner() != null && position.winner() != undefined)) {
-    return [position.evaluate(), position]
-    // return {eval: position.evaluate(), pos: position};
+    return [position.difference(), position]
+    // return {eval: position.difference(), pos: position};
   }
   if (maxPlayer) {
     let maxEval = -Infinity;
     let bestMove = null;
     let allMoves = getAllMoves(position, LightColor, game);
     for (let m = 0; m < allMoves.length; m++) {
-      let move = allMoves[m];
-      let evaluation = minimax(move, depth-1, false, game)[0];
+      let place = allMoves[m];
+      let evaluation = minimax(place, depth-1, false, game)[0];
       maxEval = Math.max(maxEval, evaluation);
       if (maxEval == evaluation) {
-        bestMove = move;
+        bestMove = place;
       }
     }
     return [maxEval, bestMove];
@@ -21,37 +21,37 @@ function minimax(position, depth, maxPlayer, game) {
     let bestMove = null;
     let allMoves = getAllMoves(position, DarkColor, game);
     for (let m = 0; m < allMoves.length; m++) {
-      let move = allMoves[m];
-      let evaluation = minimax(move, depth-1, true, game)[0];
+      let place = allMoves[m];
+      let evaluation = minimax(place, depth-1, true, game)[0];
       minEval = Math.min(minEval, evaluation);
       if (minEval == evaluation) {
-        bestMove = move;
+        bestMove = place;
       }
     }
     return [minEval, bestMove];
   }
 }
-function simulateMove(piece, move, board, game, skip) {
-  board.move(piece, move[0], move[1]);
+function simulateMove(pawn, place, Game_board, game, skip) {
+  Game_board.place(pawn, place[0], place[1]);
   if (skip.length > 0) {
-      board.remove(skip);
+      Game_board.remove(skip);
   }
-  return board;
+  return Game_board;
 }
 
-function getAllMoves(board, color, game) {
+function getAllMoves(Game_board, color, game) {
   let moves = [];
-  let allPieces = board.getAllPieces(color);
+  let allPieces = Game_board.getAllPieces(color);
   for (let p = 0; p < allPieces.length; p++) {
-    let piece = allPieces[p];
-    let validMoves = board.getForcedValidMoves(piece, color);
+    let pawn = allPieces[p];
+    let validMoves = Game_board.getForcedValidMoves(pawn, color);
     for (var m = 0; m < validMoves.length; m++) {
-      let move = validMoves[m].m;
+      let place = validMoves[m].m;
       let skip = validMoves[m].j;
       // console.log(skip);
       let tempBoard = copyBoard();
-      let tempPiece = tempBoard.board[piece.row][piece.col];//getPiece(piece.row, piece.col);
-      let newBoard = simulateMove(tempPiece, move, tempBoard, game, skip);
+      let tempPiece = tempBoard.Game_board[pawn.r][pawn.columns];//getPawn(pawn.r, pawn.columns);
+      let newBoard = simulateMove(tempPiece, place, tempBoard, game, skip);
       moves.push(newBoard);
     }
   }
@@ -59,19 +59,19 @@ function getAllMoves(board, color, game) {
 }
 
 function copyBoard() {
-  var board = new Board();
-  board.board = _.cloneDeep(game.board.board);
-  // board.board = JSON.parse(JSON.stringify(game.board.board));
-  board.redLeft = game.board.redLeft;
-  board.LightColorLeft = game.board.LightColorLeft;
-  board.redKings = game.board.redKings;
-  board.LightColorKings = game.board.LightColorKings;
-  // console.log(board.board[1][2]).hello();
-  return board;
+  var Game_board = new ChechersBoard();
+  Game_board.Game_board = _.cloneDeep(game.Game_board.Game_board);
+  // Game_board.Game_board = JSON.parse(JSON.stringify(game.Game_board.Game_board));
+  Game_board.Left_of_black_pawn = game.Game_board.Left_of_black_pawn;
+  Game_board.LightColorLeft = game.Game_board.LightColorLeft;
+  Game_board.King_of_blacks = game.Game_board.King_of_blacks;
+  Game_board.LightColorKings = game.Game_board.LightColorKings;
+  // console.log(Game_board.Game_board[1][2]).hello();
+  return Game_board;
 }
 
-function copyPiece(row, col, color, board) {
-  var piece = new Piece(row, col, color);
-  piece.king = board.board[row][col];
-  return piece;
+function copyPiece(r, columns, color, Game_board) {
+  var pawn = new Piece(r, columns, color);
+  pawn.king = Game_board.Game_board[r][columns];
+  return pawn;
 }
