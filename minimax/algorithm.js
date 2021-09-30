@@ -1,28 +1,29 @@
-function minimax(position, depth, maxPlayer, game) {
+function minimax(position, depth, maxPlayer) {
   if (depth == 0 || (position.winner() != null && position.winner() != undefined)) {
-    return [position.difference(), position]
-    // return {eval: position.difference(), pos: position};
+    return [position.evaluate(), position]
   }
+
   if (maxPlayer) {
     let maxEval = -Infinity;
     let bestMove = null;
-    let allMoves = getAllMoves(position, LightColor, game);
+    let allMoves = getAllMoves(position, LightColor);
     for (let m = 0; m < allMoves.length; m++) {
-      let place = allMoves[m];
-      let evaluation = minimax(place, depth-1, false, game)[0];
+      let move = allMoves[m];
+      let evaluation = minimax(move, depth - 1, false)[0];
       maxEval = Math.max(maxEval, evaluation);
       if (maxEval == evaluation) {
         bestMove = place;
       }
     }
+    console.log(game);
     return [maxEval, bestMove];
   } else {
     let minEval = Infinity;
     let bestMove = null;
-    let allMoves = getAllMoves(position, DarkColor, game);
+    let allMoves = getAllMoves(position, DarkColor);
     for (let m = 0; m < allMoves.length; m++) {
-      let place = allMoves[m];
-      let evaluation = minimax(place, depth-1, true, game)[0];
+      let move = allMoves[m];
+      let evaluation = minimax(move, depth - 1, true)[0];
       minEval = Math.min(minEval, evaluation);
       if (minEval == evaluation) {
         bestMove = place;
@@ -31,15 +32,22 @@ function minimax(position, depth, maxPlayer, game) {
     return [minEval, bestMove];
   }
 }
-function simulateMove(pawn, place, Game_board, game, skip) {
-  Game_board.place(pawn, place[0], place[1]);
+
+function randomMove(position) {
+  let allMoves = getAllMoves(position, LightColor);
+  let move = Math.floor(Math.random() * allMoves.length);
+  return allMoves[move];
+}
+
+function simulateMove(piece, move, board, skip) {
+  board.move(piece, move[0], move[1]);
   if (skip.length > 0) {
-      Game_board.remove(skip);
+    board.remove(skip);
   }
   return Game_board;
 }
 
-function getAllMoves(Game_board, color, game) {
+function getAllMoves(board, color) {
   let moves = [];
   let allPieces = Game_board.getAllPieces(color);
   for (let p = 0; p < allPieces.length; p++) {
@@ -48,10 +56,9 @@ function getAllMoves(Game_board, color, game) {
     for (var m = 0; m < validMoves.length; m++) {
       let place = validMoves[m].m;
       let skip = validMoves[m].j;
-      // console.log(skip);
       let tempBoard = copyBoard();
-      let tempPiece = tempBoard.Game_board[pawn.r][pawn.columns];//getPawn(pawn.r, pawn.columns);
-      let newBoard = simulateMove(tempPiece, place, tempBoard, game, skip);
+      let tempPiece = tempBoard.board[piece.row][piece.col];//getPiece(piece.row, piece.col);
+      let newBoard = simulateMove(tempPiece, move, tempBoard, skip);
       moves.push(newBoard);
     }
   }
@@ -59,15 +66,13 @@ function getAllMoves(Game_board, color, game) {
 }
 
 function copyBoard() {
-  var Game_board = new ChechersBoard();
-  Game_board.Game_board = _.cloneDeep(game.Game_board.Game_board);
-  // Game_board.Game_board = JSON.parse(JSON.stringify(game.Game_board.Game_board));
-  Game_board.Left_of_black_pawn = game.Game_board.Left_of_black_pawn;
-  Game_board.LightColorLeft = game.Game_board.LightColorLeft;
-  Game_board.King_of_blacks = game.Game_board.King_of_blacks;
-  Game_board.LightColorKings = game.Game_board.LightColorKings;
-  // console.log(Game_board.Game_board[1][2]).hello();
-  return Game_board;
+  var board = new Board();
+  board.board = _.cloneDeep(game.board.board);
+  board.redLeft = game.board.redLeft;
+  board.LightColorLeft = game.board.LightColorLeft;
+  board.redKings = game.board.redKings;
+  board.LightColorKings = game.board.LightColorKings;
+  return board;
 }
 
 function copyPiece(r, columns, color, Game_board) {

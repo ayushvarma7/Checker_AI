@@ -13,7 +13,7 @@ class Game {
 		this.validMoves = [];
 	}
 	winner() {
-		if (this.Game_board == null) {return this.turn;}
+		if (this.Game_board == null) { return this.turn; }
 		return this.Game_board.Left_of_black_pawn <= 0 ? LightColor : this.Game_board.Left_of_white_pawn <= 0 ? DarkColor : null;
 	}
 	reset() {
@@ -85,15 +85,16 @@ class Game {
 	}
 	gamePlayAI(game) {
 		if (game.turn == LightColor) {
-			let miniMax = minimax(game.getBoard(), 4, true, this);
+			let miniMax = minimax(game.getBoard(), 4, true);
 			let value = miniMax[0];
 			let newBoard = miniMax[1];
 			game.aiMove(newBoard);
+			game.aiMove(randomMove(game.getBoard()));
 		}
 	}
 	gamePlayHuman() {
 	}
 	winCheck() {
-		
+
 	}
 }

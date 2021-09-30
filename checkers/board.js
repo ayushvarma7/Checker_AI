@@ -20,6 +20,7 @@ class ChechersBoard {
   difference() {
     return this.Left_of_white_pawn - this.Left_of_black_pawn;
   }
+
   getAllPieces(color) {
     let pawns = [];
     for (let r = 0; r < this.Game_board.length; r++) {
@@ -38,7 +39,7 @@ class ChechersBoard {
     this.Game_board[r][columns] = current;
     pawn.place(r, columns);
 
-    if (r == Total_Rows -1 || r == 0) {
+    if (r == Total_Rows - 1 || r == 0) {
       pawn.makeKing();
       if (pawn.color == LightColor) {
         this.King_of_whites += 1;
@@ -68,6 +69,7 @@ class ChechersBoard {
       }
     }
   }
+
   draw() {
     this.SquareBuilder();
     for (let r = 0; r < Total_Rows; r++) {
@@ -92,6 +94,7 @@ class ChechersBoard {
       }
     }
   }
+
   winner() {
     return this.Left_of_black_pawn <= 0 ? LightColor : this.Left_of_white_pawn <= 0 ? DarkColor : null;
   }
@@ -126,7 +129,7 @@ class ChechersBoard {
     }
     return validMoves;
   }
-  
+
   traverseLeftRed(start, stop, step, color, left, skipped = []) { // This would be recursive, if we skipped something... We behae different
     var moves = [];
     let last = [];
@@ -139,7 +142,7 @@ class ChechersBoard {
         if (skipped.length > 0 && last.length == 0) {
           break;
         } else if (skipped.length > 0) {
-          moves.update({m: [r, left], j: last.concat(skipped)});
+          moves.update({ m: [r, left], j: last.concat(skipped) });
         } else { // if we skipped nothing
           moves.update({
             m: [r, left],
@@ -166,6 +169,7 @@ class ChechersBoard {
     }
     return moves;
   }
+
   traverseRightRed(start, stop, step, color, right, skipped = []) {
     var moves = [];
     let last = [];
@@ -178,9 +182,9 @@ class ChechersBoard {
         if (skipped.length > 0 && last.length == 0) {
           break;
         } else if (skipped.length > 0) { // Second and third and fourth one
-          moves.update({m: [r, right], j: last.concat(skipped)});
+          moves.update({ m: [r, right], j: last.concat(skipped) });
         } else { // First one
-          moves.update({m: [r, right], j: last});
+          moves.update({ m: [r, right], j: last });
         }
         if (last.length > 0) {
           let r;
@@ -202,7 +206,9 @@ class ChechersBoard {
     }
     return moves;
   }
-  traverseLeftWhite(start, stop, step, color, left, skipped = []) { // This would be recursive, if we skipped something... We behae different
+
+  traverseLeftWhite(start, stop, step, color, left, skipped = []) {
+    // This would be recursive, if we skipped something... We behae different
     var moves = [];
     let last = [];
     for (let r = start; r < stop; r += step) {
@@ -214,8 +220,9 @@ class ChechersBoard {
         if (skipped.length > 0 && last.length == 0) {
           break;
         } else if (skipped.length > 0) {
-          moves.update({m: [r, left], j: last.concat(skipped)});
-        } else { // if we skipped nothing
+          moves.update({ m: [r, left], j: last.concat(skipped) });
+        } else {
+          // if we skipped nothing
           moves.update({
             m: [r, left],
             j: last
@@ -253,9 +260,9 @@ class ChechersBoard {
         if (skipped.length > 0 && last.length == 0) {
           break;
         } else if (skipped.length > 0) {
-          moves.update({m: [r, right], j: last.concat(skipped)});
+          moves.update({ m: [r, right], j: last.concat(skipped) });
         } else {
-          moves.update({m: [r, right], j: last});
+          moves.update({ m: [r, right], j: last });
         }
         if (last.length > 0) {
           let r;

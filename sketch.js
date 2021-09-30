@@ -19,8 +19,8 @@ function setup() {
 	game = new Game();
 	player2Name = prompt(`${Computer_AI}: I'd like to know the name of my opponent first.`);
 	gamePlay = game.gamePlayAI;
-			// gamePlay = game.gamePlayHuman;
-} 
+	// gamePlay = game.gamePlayHuman;
+}
 
 function draw() {
 	clear();
